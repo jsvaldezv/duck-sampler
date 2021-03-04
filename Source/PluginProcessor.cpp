@@ -10,17 +10,38 @@ Sampler_Curso_FinalAudioProcessor::Sampler_Curso_FinalAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), parameters(*this, nullptr, "PARAMETERS", initializeGUI())
 #endif
 {
     for(int i = 0; i < getTotalNumInputChannels(); i++)
     {
         ptrVolume[i] = std::unique_ptr<sampler_Volume>(new sampler_Volume());
+        ptrLFO[i] = std::unique_ptr<sampler_LFO>(new sampler_LFO());
     }
 }
 
 Sampler_Curso_FinalAudioProcessor::~Sampler_Curso_FinalAudioProcessor()
 {
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProcessor::initializeGUI()
+{
+    std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Volume",
+                                                                 "volume",
+                                                                 0.0f,
+                                                                 1.0f,
+                                                                 0.5f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Rate",
+                                                                 "rate",
+                                                                 0.1f,
+                                                                 20.0f,
+                                                                 1.0f));
+    
+    return {params.begin(), params.end()};
+    
 }
 
 const juce::String Sampler_Curso_FinalAudioProcessor::getName() const
@@ -85,7 +106,10 @@ void Sampler_Curso_FinalAudioProcessor::changeProgramName (int index, const juce
 
 void Sampler_Curso_FinalAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-
+    for(int i = 0; i < getTotalNumInputChannels(); i++)
+    {
+        ptrLFO[i]->prepareLFO(sampleRate);
+    }
 }
 
 void Sampler_Curso_FinalAudioProcessor::releaseResources()
@@ -127,8 +151,13 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
     {
         ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
                                           buffer.getWritePointer(channel),
-                                          0.5f,
+                                          *parameters.getRawParameterValue("Volume"),
                                           buffer.getNumSamples());
+        
+        ptrLFO[channel]->processLFO(buffer.getWritePointer(channel),
+                                    buffer.getWritePointer(channel),
+                                    *parameters.getRawParameterValue("Rate"),
+                                    buffer.getNumSamples());
     }
 }
 

@@ -15,6 +15,7 @@ Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+    auto& params = processor.getParameters();
     setSize (400, 300);
 }
 

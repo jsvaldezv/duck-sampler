@@ -1,6 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "sampler_Volume.h"
+#include "sampler_LFO.h"
 
 class Sampler_Curso_FinalAudioProcessor  : public juce::AudioProcessor
 {
@@ -31,10 +32,14 @@ public:
     void changeProgramName (int index, const juce::String& newName) override;
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    juce::AudioProcessorValueTreeState parameters;
+    juce::AudioProcessorValueTreeState::ParameterLayout initializeGUI();
 
 private:
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
-    
+    std::unique_ptr<sampler_LFO> ptrLFO[2];
+        
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
 };

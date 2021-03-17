@@ -23,6 +23,4 @@ private:
     int wtSize;
     
     juce::Array<float> waveTableSin;
-    
-    
 };

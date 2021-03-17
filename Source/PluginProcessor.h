@@ -35,8 +35,15 @@ public:
     
     juce::AudioProcessorValueTreeState parameters;
     juce::AudioProcessorValueTreeState::ParameterLayout initializeGUI();
+    
+    void loadFile();
 
 private:
+    
+    juce::Synthesiser mySampler;
+    
+    juce::AudioFormatManager formatManager;
+    juce::AudioFormatReader* formatReader {nullptr};
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
     std::unique_ptr<sampler_LFO> ptrLFO[2];

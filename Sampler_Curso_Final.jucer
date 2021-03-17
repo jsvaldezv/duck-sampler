@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="zdkcC9" name="Sampler_Curso_Final" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyName="Tec" companyCopyright="Tec">
+              jucerFormatVersion="1" companyName="Tec" companyCopyright="Tec"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="gSpvB3" name="Sampler_Curso_Final">
     <GROUP id="{D06D0BD4-3BE6-81F8-5D8D-DDDCAE97D041}" name="DSP">
       <FILE id="J5XLnA" name="sampler_LFO.cpp" compile="1" resource="0" file="Source/sampler_LFO.cpp"/>

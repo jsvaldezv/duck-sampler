@@ -13,7 +13,14 @@ Sampler_Curso_FinalAudioProcessor::Sampler_Curso_FinalAudioProcessor()
                        ), parameters(*this, nullptr, "PARAMETERS", initializeGUI())
 #endif
 {
-    for(int i = 0; i < getTotalNumInputChannels(); i++)
+    formatManager.registerBasicFormats();
+    
+    for(int i = 0; i < 3; i++)
+    {
+        mySampler.addVoice (new juce::SamplerVoice());
+    }
+    
+    for(int i = 0; i < getTotalNumOutputChannels(); i++)
     {
         ptrVolume[i] = std::unique_ptr<sampler_Volume>(new sampler_Volume());
         ptrLFO[i] = std::unique_ptr<sampler_LFO>(new sampler_LFO());
@@ -22,6 +29,7 @@ Sampler_Curso_FinalAudioProcessor::Sampler_Curso_FinalAudioProcessor()
 
 Sampler_Curso_FinalAudioProcessor::~Sampler_Curso_FinalAudioProcessor()
 {
+    formatReader = nullptr;
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProcessor::initializeGUI()
@@ -106,7 +114,9 @@ void Sampler_Curso_FinalAudioProcessor::changeProgramName (int index, const juce
 
 void Sampler_Curso_FinalAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    for(int i = 0; i < getTotalNumInputChannels(); i++)
+    mySampler.setCurrentPlaybackSampleRate(sampleRate);
+    
+    for(int i = 0; i < getTotalNumOutputChannels(); i++)
     {
         ptrLFO[i]->prepareLFO(sampleRate);
     }
@@ -146,7 +156,12 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
+    
+    mySampler.renderNextBlock(buffer,
+                              midiMessages,
+                              0,
+                              buffer.getNumSamples());
+    
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
         ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
@@ -159,6 +174,22 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
                                     *parameters.getRawParameterValue("Rate"),
                                     buffer.getNumSamples());
     }
+}
+
+void Sampler_Curso_FinalAudioProcessor::loadFile()
+{
+    juce::FileChooser chooser {"Carga tu sonido"};
+    
+    if(chooser.browseForFileToOpen())
+    {
+        auto file = chooser.getResult();
+        formatReader = formatManager.createReaderFor(file);
+    }
+    
+    juce::BigInteger range;
+    range.setRange(0, 128, true);
+    
+    mySampler.addSound(new juce::SamplerSound("Sample", *formatReader, range, 60, 0.1, 0.1, 10));
 }
 
 bool Sampler_Curso_FinalAudioProcessor::hasEditor() const

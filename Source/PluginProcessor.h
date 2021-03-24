@@ -37,6 +37,8 @@ public:
     juce::AudioProcessorValueTreeState::ParameterLayout initializeGUI();
     
     void loadFile();
+    void loadFile(const juce::String& path);
+    int getNumSamplerSounds(){return mySampler.getNumSounds();};
 
 private:
     

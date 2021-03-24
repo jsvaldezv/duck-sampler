@@ -148,7 +148,8 @@ bool Sampler_Curso_FinalAudioProcessor::isBusesLayoutSupported (const BusesLayou
 }
 #endif
 
-void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
+                                                      juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -189,6 +190,17 @@ void Sampler_Curso_FinalAudioProcessor::loadFile()
     juce::BigInteger range;
     range.setRange(0, 128, true);
     
+    mySampler.addSound(new juce::SamplerSound("Sample", *formatReader, range, 60, 0.1, 0.1, 10));
+}
+
+void Sampler_Curso_FinalAudioProcessor::loadFile(const juce::String& path)
+{
+    mySampler.clearSounds();
+    auto file = juce::File(path);
+    formatReader = formatManager.createReaderFor(file);
+    
+    juce::BigInteger range;
+    range.setRange(0, 128, true);
     mySampler.addSound(new juce::SamplerSound("Sample", *formatReader, range, 60, 0.1, 0.1, 10));
 }
 

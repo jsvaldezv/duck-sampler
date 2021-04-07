@@ -199,6 +199,16 @@ void Sampler_Curso_FinalAudioProcessor::loadFile(const juce::String& path)
     auto file = juce::File(path);
     formatReader = formatManager.createReaderFor(file);
     
+    auto sampleLength = static_cast<int>(formatReader->lengthInSamples);
+    DBG("LENGHT: " << sampleLength);
+    waveForm.setSize(1, sampleLength);
+    formatReader->read(&waveForm,
+                       0,
+                       sampleLength,
+                       0,
+                       true,
+                       false);
+    
     juce::BigInteger range;
     range.setRange(0, 128, true);
     mySampler.addSound(new juce::SamplerSound("Sample", *formatReader, range, 60, 0.1, 0.1, 10));
@@ -228,3 +238,9 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new Sampler_Curso_FinalAudioProcessor();
 }
+
+//NEWS
+//auto sampleLength = static_cast<int>(formatReader->lengthInSamples);
+//waveForm.setSize(1, sampleLength);
+//formatReader->read(&waveForm, 0, sampleLength, 0, true, false);
+//

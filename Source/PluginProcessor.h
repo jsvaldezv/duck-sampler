@@ -39,11 +39,14 @@ public:
     void loadFile();
     void loadFile(const juce::String& path);
     int getNumSamplerSounds(){return mySampler.getNumSounds();};
+    
+    juce::AudioBuffer<float>& getWaveform() {return waveForm;}
 
 private:
     
-    juce::Synthesiser mySampler;
+    juce::AudioBuffer<float> waveForm;
     
+    juce::Synthesiser mySampler;
     juce::AudioFormatManager formatManager;
     juce::AudioFormatReader* formatReader {nullptr};
 
@@ -52,3 +55,9 @@ private:
         
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
 };
+
+//NUEVO
+//juce::AudioBuffer<float>& getWaveform() {return waveForm;}
+
+//NUEVO
+//juce::AudioBuffer<float> waveForm;

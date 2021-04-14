@@ -41,7 +41,7 @@ public:
     int getNumSamplerSounds(){return mySampler.getNumSounds();};
     
     juce::AudioBuffer<float>& getWaveform() {return waveForm;}
-
+    
 private:
     
     juce::AudioBuffer<float> waveForm;
@@ -52,12 +52,10 @@ private:
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
     std::unique_ptr<sampler_LFO> ptrLFO[2];
-        
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
 };
 
-//NUEVO
-//juce::AudioBuffer<float>& getWaveform() {return waveForm;}
-
-//NUEVO
-//juce::AudioBuffer<float> waveForm;
+//NEW
+//void updateADSR();
+//juce::ADSR::Parameters myADSRParameters;

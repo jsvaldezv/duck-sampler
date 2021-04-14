@@ -87,35 +87,3 @@ void Sampler_Curso_FinalAudioProcessorEditor::filesDropped (const juce::StringAr
     repaint();
     
 }
-
-//NEW
-/*juce::Path p;
-
-if(shouldBePainting)
-{
-    juce::Path p;
-    audioPoints.clear();
-    
-    auto waveform = audioProcessor.getWaveform();
-    auto ratio = waveform.getNumSamples() / getWidth();
-    auto buffer = waveform.getReadPointer(0);
-    
-    for(int sample = 0; sample < waveform.getNumSamples(); sample+=ratio)
-    {
-        audioPoints.push_back(buffer[sample]);
-    }
-    
-    p.startNewSubPath(0, getHeight()/2);
-    
-    for(int sample = 0; sample < audioPoints.size(); ++sample)
-    {
-        auto point = juce::jmap(audioPoints[sample], -1.0f, 1.0f, 200.0f, 0.0f);
-        p.lineTo(sample, point);
-    }
-    
-    g.strokePath(p, juce::PathStrokeType(2));
-    shouldBePainting = false;
-}*/
-//
-
-//shouldBePainting = true;

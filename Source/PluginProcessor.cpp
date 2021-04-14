@@ -239,8 +239,20 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new Sampler_Curso_FinalAudioProcessor();
 }
 
-//NEWS
-//auto sampleLength = static_cast<int>(formatReader->lengthInSamples);
-//waveForm.setSize(1, sampleLength);
-//formatReader->read(&waveForm, 0, sampleLength, 0, true, false);
-//
+//NEW
+/*myADSRParameters.attack = 1.0f;
+myADSRParameters.decay = 0.2f;
+myADSRParameters.sustain = 0.5f;
+myADSRParameters.release = 3.0f;
+updateADSR();*/
+
+/*void Sampler_Curso_FinalAudioProcessor::updateADSR()
+{
+    for(int i=0; i < mySampler.getNumSounds(); ++i)
+    {
+        if(auto sound = dynamic_cast<juce::SamplerSound*>(mySampler.getSound(i).get()))
+        {
+            sound->setEnvelopeParameters(myADSRParameters);
+        }
+    }
+}*/

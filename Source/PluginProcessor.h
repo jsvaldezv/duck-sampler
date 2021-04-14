@@ -42,6 +42,8 @@ public:
     
     juce::AudioBuffer<float>& getWaveform() {return waveForm;}
     
+    void updateADSR();
+    
 private:
     
     juce::AudioBuffer<float> waveForm;
@@ -49,13 +51,11 @@ private:
     juce::Synthesiser mySampler;
     juce::AudioFormatManager formatManager;
     juce::AudioFormatReader* formatReader {nullptr};
+    
+    juce::ADSR::Parameters myADSRParameters;
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
     std::unique_ptr<sampler_LFO> ptrLFO[2];
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
 };
-
-//NEW
-//void updateADSR();
-//juce::ADSR::Parameters myADSRParameters;

@@ -48,8 +48,31 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
                                                                  20.0f,
                                                                  1.0f));
     
-    return {params.begin(), params.end()};
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Attack",
+                                                                 "attack",
+                                                                 0.1f,
+                                                                 1.0f,
+                                                                 0.1f));
     
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Decay",
+                                                                 "decay",
+                                                                 0.1f,
+                                                                 1.0f,
+                                                                 0.1f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Sustain",
+                                                                 "sustain",
+                                                                 0.1f,
+                                                                 1.0f,
+                                                                 0.1f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Release",
+                                                                 "release",
+                                                                 0.1f,
+                                                                 3.0f,
+                                                                 0.1f));
+    
+    return {params.begin(), params.end()};
 }
 
 const juce::String Sampler_Curso_FinalAudioProcessor::getName() const
@@ -120,6 +143,8 @@ void Sampler_Curso_FinalAudioProcessor::prepareToPlay (double sampleRate, int sa
     {
         ptrLFO[i]->prepareLFO(sampleRate);
     }
+    
+    updateADSR();
 }
 
 void Sampler_Curso_FinalAudioProcessor::releaseResources()
@@ -163,6 +188,12 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
                               0,
                               buffer.getNumSamples());
     
+    myADSRParameters.attack = *parameters.getRawParameterValue("Attack");
+    myADSRParameters.decay = *parameters.getRawParameterValue("Decay");
+    myADSRParameters.sustain = *parameters.getRawParameterValue("Sustain");
+    myADSRParameters.release = *parameters.getRawParameterValue("Release");
+    updateADSR();
+
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
         ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
@@ -239,20 +270,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new Sampler_Curso_FinalAudioProcessor();
 }
 
-//NEW
-/*myADSRParameters.attack = 1.0f;
-myADSRParameters.decay = 0.2f;
-myADSRParameters.sustain = 0.5f;
-myADSRParameters.release = 3.0f;
-updateADSR();*/
-
-/*void Sampler_Curso_FinalAudioProcessor::updateADSR()
+void Sampler_Curso_FinalAudioProcessor::updateADSR()
 {
-    for(int i=0; i < mySampler.getNumSounds(); ++i)
+    for(int i = 0; i < mySampler.getNumSounds(); ++i)
     {
         if(auto sound = dynamic_cast<juce::SamplerSound*>(mySampler.getSound(i).get()))
         {
             sound->setEnvelopeParameters(myADSRParameters);
         }
     }
-}*/
+}

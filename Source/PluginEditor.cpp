@@ -15,17 +15,29 @@ void Sampler_Curso_FinalAudioProcessorEditor::createGeneralComponents()
 {
     rateSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     rateSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    rateSlider.setBounds(250, 320, 100, 100);
+    rateSlider.setBounds(250, 350, 100, 100);
     addAndMakeVisible(rateSlider);
     
     rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                    "Rate",
                                                                                                    rateSlider);
     
+    rateLabel.setText("Rate", juce::dontSendNotification);
+    rateLabel.attachToComponent(&rateSlider, true);
+    rateLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    rateLabel.setCentrePosition(rateSlider.getX() + 50, rateSlider.getY() - 5);
+    addAndMakeVisible(rateLabel);
+    
     volumenSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     volumenSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    volumenSlider.setBounds(350, 320, 100, 100);
+    volumenSlider.setBounds(350, 350, 100, 100);
     addAndMakeVisible(volumenSlider);
+    
+    volumenLabel.setText("Volumen", juce::dontSendNotification);
+    volumenLabel.attachToComponent(&volumenSlider, true);
+    volumenLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    volumenLabel.setCentrePosition(volumenSlider.getX() + 50, volumenSlider.getY() - 5);
+    addAndMakeVisible(volumenLabel);
     
     volumenSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                       "Volume",
@@ -39,6 +51,12 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     attackSlider.setBounds(150, 220, 100, 100);
     addAndMakeVisible(attackSlider);
     
+    attackLabel.setText("Attack", juce::dontSendNotification);
+    attackLabel.attachToComponent(&attackSlider, true);
+    attackLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    attackLabel.setCentrePosition(attackSlider.getX() + 50, attackSlider.getY() - 5);
+    addAndMakeVisible(attackLabel);
+    
     attackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                      "Attack",
                                                                                                      attackSlider);
@@ -47,6 +65,12 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
     decaySlider.setBounds(250, 220, 100, 100);
     addAndMakeVisible(decaySlider);
+    
+    decayLabel.setText("Decay", juce::dontSendNotification);
+    decayLabel.attachToComponent(&decaySlider, true);
+    decayLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    decayLabel.setCentrePosition(decaySlider.getX() + 50, decaySlider.getY() - 5);
+    addAndMakeVisible(decayLabel);
     
     decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                      "Decay",
@@ -57,6 +81,12 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     sustainSlider.setBounds(350, 220, 100, 100);
     addAndMakeVisible(sustainSlider);
     
+    sustainLabel.setText("Sustain", juce::dontSendNotification);
+    sustainLabel.attachToComponent(&sustainSlider, true);
+    sustainLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    sustainLabel.setCentrePosition(sustainSlider.getX() + 50, sustainSlider.getY() - 5);
+    addAndMakeVisible(sustainLabel);
+    
     sustainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                      "Sustain",
                                                                                                      sustainSlider);
@@ -65,6 +95,12 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     releaseSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
     releaseSlider.setBounds(450, 220, 100, 100);
     addAndMakeVisible(releaseSlider);
+    
+    releaseLabel.setText("Release", juce::dontSendNotification);
+    releaseLabel.attachToComponent(&releaseSlider, true);
+    releaseLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    releaseLabel.setCentrePosition(releaseSlider.getX() + 50, releaseSlider.getY() - 5);
+    addAndMakeVisible(releaseLabel);
     
     releaseSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                      "Release",

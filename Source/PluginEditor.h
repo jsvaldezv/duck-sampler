@@ -28,22 +28,28 @@ private:
     //ATTACK SLIDER
     juce::Slider attackSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
+    juce::Label attackLabel;
     //DECAY SLIDER
     juce::Slider decaySlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
+    juce::Label decayLabel;
     //SUSTAIN SLIDER
     juce::Slider sustainSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sustainSliderAttachment;
+    juce::Label sustainLabel;
     //RELEASE SLIDER
     juce::Slider releaseSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseSliderAttachment;
+    juce::Label releaseLabel;
     //*******************************************GENERAL COMPONENTS******************************************//
     //RATE SLIDER
     juce::Slider rateSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateSliderAttachment;
+    juce::Label rateLabel;
     //VOLUMEN SLIDER
     juce::Slider volumenSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> volumenSliderAttachment;
+    juce::Label volumenLabel;
     
     Sampler_Curso_FinalAudioProcessor& audioProcessor;
 

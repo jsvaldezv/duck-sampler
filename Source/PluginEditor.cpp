@@ -6,16 +6,37 @@ Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor
 {
     setSize (700, 500);
     createADSRComponents();
-    //loadButton.onClick = [&]() {audioProcessor.loadFile();};
+    createGeneralComponents();
 }
 
 Sampler_Curso_FinalAudioProcessorEditor::~Sampler_Curso_FinalAudioProcessorEditor(){}
+
+void Sampler_Curso_FinalAudioProcessorEditor::createGeneralComponents()
+{
+    rateSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    rateSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
+    rateSlider.setBounds(250, 320, 100, 100);
+    addAndMakeVisible(rateSlider);
+    
+    rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
+                                                                                                   "Rate",
+                                                                                                   rateSlider);
+    
+    volumenSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    volumenSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
+    volumenSlider.setBounds(350, 320, 100, 100);
+    addAndMakeVisible(volumenSlider);
+    
+    volumenSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
+                                                                                                      "Volume",
+                                                                                                      volumenSlider);
+}
 
 void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
 {
     attackSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     attackSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    attackSlider.setBounds(0, 300, 100, 100);
+    attackSlider.setBounds(150, 220, 100, 100);
     addAndMakeVisible(attackSlider);
     
     attackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
@@ -24,7 +45,7 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     
     decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    decaySlider.setBounds(100, 300, 100, 100);
+    decaySlider.setBounds(250, 220, 100, 100);
     addAndMakeVisible(decaySlider);
     
     decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
@@ -33,7 +54,7 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     
     sustainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     sustainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    sustainSlider.setBounds(200, 300, 100, 100);
+    sustainSlider.setBounds(350, 220, 100, 100);
     addAndMakeVisible(sustainSlider);
     
     sustainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
@@ -42,7 +63,7 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
     
     releaseSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     releaseSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    releaseSlider.setBounds(300, 300, 100, 100);
+    releaseSlider.setBounds(450, 220, 100, 100);
     addAndMakeVisible(releaseSlider);
     
     releaseSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
@@ -51,18 +72,16 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
 }
 
 void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
-{
+{    
+    g.fillAll(juce::Colours::cadetblue.darker());
+    auto waveform = audioProcessor.getWaveform();
     
-    g.fillAll(juce::Colours::black);
-    g.setColour (juce::Colours::white);
-    
-    if(shouldBePaint)
+    if(waveform.getNumSamples() > 0)
     {
         juce::Path p;
         audioPoints.clear();
         
-        auto waveform = audioProcessor.getWaveform();
-        auto ratio = waveform.getNumSamples() / 600;
+        auto ratio = waveform.getNumSamples() / 700;
         auto buffer = waveform.getReadPointer(0);
         
         for(int sample = 0; sample < waveform.getNumSamples(); sample+=ratio)
@@ -70,6 +89,7 @@ void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
             audioPoints.push_back(buffer[sample]);
         }
         
+        g.setColour(juce::Colours::yellow);
         p.startNewSubPath(0, 200/2);
         
         for(int sample = 0; sample < audioPoints.size(); ++sample)
@@ -79,23 +99,21 @@ void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
         }
         
         g.strokePath(p, juce::PathStrokeType(1));
-        shouldBePaint = false;
+        
+        g.setColour(juce::Colours::white);
+        g.setFont(15.0f);
+        auto textBounds = getLocalBounds().reduced(10, 10);
+        g.drawFittedText(fileName, textBounds, juce::Justification::topRight, 1);
     }
-    
-    /*if(audioProcessor.getNumSamplerSounds() > 0)
+    else
     {
-        g.fillAll(juce::Colours::green);
-        g.drawFittedText ("LOADED", getLocalBounds(), juce::Justification::centred, 1);
+        g.setColour(juce::Colours::white);
+        g.setFont(40.0f);
+        g.drawFittedText("Jala un audio", 250, 50, 200, 40, juce::Justification::centred, 1);
     }
-    else{
-        g.drawFittedText ("LOAD A FILE", getLocalBounds(), juce::Justification::centred, 1);
-    }*/
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::resized()
-{
-    //loadButton.setBounds(getWidth()/2-50, getHeight()/2-50, 100, 100);
-}
+void Sampler_Curso_FinalAudioProcessorEditor::resized(){}
 
 bool Sampler_Curso_FinalAudioProcessorEditor::isInterestedInFileDrag (const juce::StringArray& files)
 {
@@ -118,11 +136,11 @@ void Sampler_Curso_FinalAudioProcessorEditor::filesDropped (const juce::StringAr
     {
         if(isInterestedInFileDrag(file))
         {
-            shouldBePaint = true;
+            auto myFile = std::make_unique<juce::File>(file);
+            fileName = myFile->getFileNameWithoutExtension() + myFile->getFileExtension();
             audioProcessor.loadFile(file);
         }
     }
     
     repaint();
-    
 }

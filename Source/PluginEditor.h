@@ -17,14 +17,14 @@ public:
     void filesDropped (const juce::StringArray& files, int x, int y) override;
     
     void createADSRComponents();
+    void createGeneralComponents();
 
 private:
     
-    juce::TextButton loadButton {"Load"};
-    
     std::vector<float> audioPoints;
-    bool shouldBePaint {false};
+    juce::String fileName {""};
     
+    //*******************************************ADSR COMPONENTS******************************************//
     //ATTACK SLIDER
     juce::Slider attackSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
@@ -37,6 +37,7 @@ private:
     //RELEASE SLIDER
     juce::Slider releaseSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseSliderAttachment;
+    //*******************************************GENERAL COMPONENTS******************************************//
     //RATE SLIDER
     juce::Slider rateSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateSliderAttachment;

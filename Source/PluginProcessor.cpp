@@ -24,6 +24,7 @@ Sampler_Curso_FinalAudioProcessor::Sampler_Curso_FinalAudioProcessor()
     {
         ptrVolume[i] = std::unique_ptr<sampler_Volume>(new sampler_Volume());
         ptrLFO[i] = std::unique_ptr<sampler_LFO>(new sampler_LFO());
+        ptrDistor[i] = std::unique_ptr<sampler_Distorsion>(new sampler_Distorsion());
     }
 }
 
@@ -71,6 +72,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
                                                                  0.1f,
                                                                  3.0f,
                                                                  0.1f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("Distorsion",
+                                                                 "distorsion",
+                                                                 0.5f,
+                                                                 5.0f,
+                                                                 1.0f));
     
     return {params.begin(), params.end()};
 }
@@ -219,6 +226,11 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
                                     buffer.getWritePointer(channel),
                                     *parameters.getRawParameterValue("Rate"),
                                     buffer.getNumSamples());
+        
+        ptrDistor[channel]->processDistor(buffer.getWritePointer(channel),
+                                          buffer.getWritePointer(channel),
+                                          *parameters.getRawParameterValue("Distorsion"),
+                                          buffer.getNumSamples());
     }
 }
 

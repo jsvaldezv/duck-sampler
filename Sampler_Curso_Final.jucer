@@ -6,6 +6,10 @@
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="gSpvB3" name="Sampler_Curso_Final">
     <GROUP id="{D06D0BD4-3BE6-81F8-5D8D-DDDCAE97D041}" name="DSP">
+      <FILE id="gPJstM" name="sampler_Distorsion.cpp" compile="1" resource="0"
+            file="Source/sampler_Distorsion.cpp"/>
+      <FILE id="xlcbvw" name="sampler_Distorsion.h" compile="0" resource="0"
+            file="Source/sampler_Distorsion.h"/>
       <FILE id="J5XLnA" name="sampler_LFO.cpp" compile="1" resource="0" file="Source/sampler_LFO.cpp"/>
       <FILE id="yOr6oO" name="sampler_LFO.h" compile="0" resource="0" file="Source/sampler_LFO.h"/>
       <FILE id="yJ4E8d" name="sampler_Volume.cpp" compile="1" resource="0"

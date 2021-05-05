@@ -2,6 +2,7 @@
 #include <JuceHeader.h>
 #include "sampler_Volume.h"
 #include "sampler_LFO.h"
+#include "sampler_Distorsion.h"
 
 class Sampler_Curso_FinalAudioProcessor  : public juce::AudioProcessor
 {
@@ -57,6 +58,7 @@ private:
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
     std::unique_ptr<sampler_LFO> ptrLFO[2];
+    std::unique_ptr<sampler_Distorsion> ptrDistor[2];
     
     std::atomic<bool> isNotePlayed {false};
     std::atomic<int> sampleCount {0};

@@ -7,9 +7,19 @@ Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor
     setSize (700, 500);
     createADSRComponents();
     createGeneralComponents();
+    
+    startTimer(30);
 }
 
-Sampler_Curso_FinalAudioProcessorEditor::~Sampler_Curso_FinalAudioProcessorEditor(){}
+Sampler_Curso_FinalAudioProcessorEditor::~Sampler_Curso_FinalAudioProcessorEditor()
+{
+    stopTimer();
+}
+
+void Sampler_Curso_FinalAudioProcessorEditor::timerCallback()
+{
+    repaint();
+}
 
 void Sampler_Curso_FinalAudioProcessorEditor::createGeneralComponents()
 {
@@ -135,11 +145,18 @@ void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
         }
         
         g.strokePath(p, juce::PathStrokeType(1));
-        
         g.setColour(juce::Colours::white);
         g.setFont(15.0f);
         auto textBounds = getLocalBounds().reduced(10, 10);
         g.drawFittedText(fileName, textBounds, juce::Justification::topRight, 1);
+        
+        auto playHeadPositon = juce::jmap<int>(audioProcessor.getSampleCount(),
+                                               0,audioProcessor.getWaveform().getNumSamples(),
+                                               0,getWidth());
+        g.setColour(juce::Colours::white);
+        g.drawLine(playHeadPositon, 0, playHeadPositon, getHeight(), 0.5f);
+        g.setColour(juce::Colours::black.withAlpha(0.2f));
+        g.fillRect(0,0,playHeadPositon,getHeight());
     }
     else
     {

@@ -39,10 +39,11 @@ public:
     void loadFile();
     void loadFile(const juce::String& path);
     int getNumSamplerSounds(){return mySampler.getNumSounds();};
-    
     juce::AudioBuffer<float>& getWaveform() {return waveForm;}
     
     void updateADSR();
+    std::atomic<bool>& isNotPlayed() {return isNotePlayed;}
+    std::atomic<int>& getSampleCount() {return sampleCount;}
     
 private:
     
@@ -56,6 +57,9 @@ private:
 
     std::unique_ptr<sampler_Volume> ptrVolume[2];
     std::unique_ptr<sampler_LFO> ptrLFO[2];
+    
+    std::atomic<bool> isNotePlayed {false};
+    std::atomic<int> sampleCount {0};
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
 };

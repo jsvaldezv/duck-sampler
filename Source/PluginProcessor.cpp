@@ -183,17 +183,31 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    mySampler.renderNextBlock(buffer,
-                              midiMessages,
-                              0,
-                              buffer.getNumSamples());
+    juce::MidiMessage m;
+    juce::MidiBuffer::Iterator it {midiMessages};
+    int sample;
+    
+    while(it.getNextEvent(m, sample))
+    {
+        if(m.isNoteOn())
+            isNotePlayed = true;
+        else if(m.isNoteOff())
+            isNotePlayed = false;
+    }
+    
+    sampleCount = isNotePlayed ? sampleCount += buffer.getNumSamples() : 0;
     
     myADSRParameters.attack = *parameters.getRawParameterValue("Attack");
     myADSRParameters.decay = *parameters.getRawParameterValue("Decay");
     myADSRParameters.sustain = *parameters.getRawParameterValue("Sustain");
     myADSRParameters.release = *parameters.getRawParameterValue("Release");
     updateADSR();
-
+    
+    mySampler.renderNextBlock(buffer,
+                              midiMessages,
+                              0,
+                              buffer.getNumSamples());
+    
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
         ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
@@ -231,7 +245,7 @@ void Sampler_Curso_FinalAudioProcessor::loadFile(const juce::String& path)
     formatReader = formatManager.createReaderFor(file);
     
     auto sampleLength = static_cast<int>(formatReader->lengthInSamples);
-    DBG("LENGHT: " << sampleLength);
+    //DBG("LENGHT: " << sampleLength);
     waveForm.setSize(1, sampleLength);
     formatReader->read(&waveForm,
                        0,

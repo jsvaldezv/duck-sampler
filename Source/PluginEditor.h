@@ -3,7 +3,8 @@
 #include "PluginProcessor.h"
 
 class Sampler_Curso_FinalAudioProcessorEditor : public juce::AudioProcessorEditor,
-                                                public juce::FileDragAndDropTarget
+                                                public juce::FileDragAndDropTarget,
+                                                public juce::Timer
 {
 public:
     
@@ -18,6 +19,8 @@ public:
     
     void createADSRComponents();
     void createGeneralComponents();
+    
+    void timerCallback() override;
 
 private:
     

@@ -1,6 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "sampler_Waveform.h"
 
 class Sampler_Curso_FinalAudioProcessorEditor : public juce::AudioProcessorEditor,
                                                 public juce::FileDragAndDropTarget,
@@ -53,6 +54,11 @@ private:
     juce::Slider volumenSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> volumenSliderAttachment;
     juce::Label volumenLabel;
+    
+    juce::Image backgroundImage;
+    juce::ImageComponent backgroundComponent;
+    
+    std::unique_ptr<sampler_Waveform> myWave;
     
     Sampler_Curso_FinalAudioProcessor& audioProcessor;
 

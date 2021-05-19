@@ -75,9 +75,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>("Distorsion",
                                                                  "distorsion",
-                                                                 0.5f,
-                                                                 5.0f,
-                                                                 1.0f));
+                                                                 0.0f,
+                                                                 4.0f,
+                                                                 2.0f));
     
     return {params.begin(), params.end()};
 }

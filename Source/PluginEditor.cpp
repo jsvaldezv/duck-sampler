@@ -5,15 +5,31 @@ Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     setSize (700, 500);
+    
+    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::back_jpg,
+                                                      BinaryData::back_jpgSize);
+
+    backgroundComponent.setImage(backgroundImage, juce::RectanglePlacement::stretchToFit);
+    addAndMakeVisible(backgroundComponent);
+    
+    myWave = std::unique_ptr<sampler_Waveform> (new sampler_Waveform(audioProcessor));
+    myWave->setBounds(0, 0, 700, 200);
+    addAndMakeVisible(*myWave);
+    
     createADSRComponents();
     createGeneralComponents();
     
-    startTimer(30);
+    startTimer(60);
 }
 
 Sampler_Curso_FinalAudioProcessorEditor::~Sampler_Curso_FinalAudioProcessorEditor()
 {
     stopTimer();
+}
+
+void Sampler_Curso_FinalAudioProcessorEditor::resized()
+{
+    backgroundComponent.setBounds(0, 0, getWidth(), getHeight());
 }
 
 void Sampler_Curso_FinalAudioProcessorEditor::timerCallback()
@@ -119,7 +135,7 @@ void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
 
 void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
 {    
-    g.fillAll(juce::Colours::cadetblue.darker());
+    /*g.fillAll(juce::Colours::cadetblue.darker());
     auto waveform = audioProcessor.getWaveform();
     
     if(waveform.getNumSamples() > 0)
@@ -163,10 +179,8 @@ void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g)
         g.setColour(juce::Colours::white);
         g.setFont(40.0f);
         g.drawFittedText("Jala un audio", 250, 50, 200, 40, juce::Justification::centred, 1);
-    }
+    }*/
 }
-
-void Sampler_Curso_FinalAudioProcessorEditor::resized(){}
 
 bool Sampler_Curso_FinalAudioProcessorEditor::isInterestedInFileDrag (const juce::StringArray& files)
 {

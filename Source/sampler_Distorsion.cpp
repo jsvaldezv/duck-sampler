@@ -15,9 +15,12 @@ sampler_Distorsion::~sampler_Distorsion()
 //VOLUMEN PROCESS
 void sampler_Distorsion::processDistor(float* inAudio, float* outAudio, float inDistor, int inNumSamples)
 {
-    for(int i = 0; i < inNumSamples; i++)
+    if(inDistor >= 0.3)
     {
-        inAudio[i] *= inDistor;
-        outAudio[i] = 1.0f / (1.0f + powf(M_E,-inAudio[i]));
+        for(int i = 0; i < inNumSamples; i++)
+        {
+            inAudio[i] *= inDistor;
+            outAudio[i] = sinh(inAudio[i])/sqrt(1+(powf(sinh(inAudio[i]),2)));
+        }
     }
 }

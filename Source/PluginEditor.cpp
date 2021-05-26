@@ -8,6 +8,12 @@ Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor
     
     backgroundImage = juce::ImageCache::getFromMemory(BinaryData::back_jpg,
                                                       BinaryData::back_jpgSize);
+    
+    on_Distor = juce::ImageCache::getFromMemory(BinaryData::on_png,
+                                                BinaryData::on_pngSize);
+    
+    off_Distor = juce::ImageCache::getFromMemory(BinaryData::off_png,
+                                                 BinaryData::off_pngSize);
 
     backgroundComponent.setImage(backgroundImage, juce::RectanglePlacement::stretchToFit);
     addAndMakeVisible(backgroundComponent);
@@ -68,6 +74,14 @@ void Sampler_Curso_FinalAudioProcessorEditor::createGeneralComponents()
     volumenSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
                                                                                                       "Volume",
                                                                                                       volumenSlider);
+    
+    distorButton.setClickingTogglesState(true);
+    distorButton.setBounds(getWidth() - 90, getHeight() - 90, 60, 60);
+    distorButton.setImages(false, true, false, off_Distor, 1.0f, {}, off_Distor, 1.0f, {}, on_Distor, 1.0f, {});
+    addAndMakeVisible(distorButton);
+    distorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.parameters,
+                                                                                               "Distorsion",
+                                                                                               distorButton);
 }
 
 void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()

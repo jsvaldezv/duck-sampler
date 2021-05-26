@@ -12,7 +12,7 @@ public:
     ~sampler_Distorsion();
     
     //VOLUMEN PROCESS
-    void processDistor(float* inAudio, float* outAudio, float inDistor, int inNumSamples);
+    void processDistor(float* inAudio, float* outAudio, bool inDistor, int inNumSamples);
     
 private:
     

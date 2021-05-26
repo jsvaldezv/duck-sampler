@@ -34,6 +34,8 @@
     </GROUP>
     <GROUP id="{D63C0754-96B5-605F-6CEF-AAAEF0FA3155}" name="Assets">
       <FILE id="SZHkPA" name="back.jpg" compile="0" resource="1" file="Assets/back.jpg"/>
+      <FILE id="N3de2M" name="off.png" compile="0" resource="1" file="Assets/off.png"/>
+      <FILE id="UZmYat" name="on.png" compile="0" resource="1" file="Assets/on.png"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

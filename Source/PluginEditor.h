@@ -60,6 +60,11 @@ private:
     
     std::unique_ptr<sampler_Waveform> myWave;
     
+    juce::Image on_Distor;
+    juce::Image off_Distor;
+    juce::ImageButton distorButton;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distorAttachment;
+    
     Sampler_Curso_FinalAudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessorEditor)

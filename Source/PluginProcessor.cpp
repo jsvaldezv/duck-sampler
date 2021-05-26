@@ -73,11 +73,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
                                                                  3.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Distorsion",
-                                                                 "distorsion",
-                                                                 0.0f,
-                                                                 4.0f,
-                                                                 2.0f));
+    params.push_back(std::make_unique<juce::AudioParameterBool>("Distorsion",
+                                                                "distorsion",
+                                                                false));
     
     return {params.begin(), params.end()};
 }
@@ -217,11 +215,6 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
     
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
-        ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
-                                          buffer.getWritePointer(channel),
-                                          *parameters.getRawParameterValue("Volume"),
-                                          buffer.getNumSamples());
-        
         ptrLFO[channel]->processLFO(buffer.getWritePointer(channel),
                                     buffer.getWritePointer(channel),
                                     *parameters.getRawParameterValue("Rate"),
@@ -230,6 +223,11 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
         ptrDistor[channel]->processDistor(buffer.getWritePointer(channel),
                                           buffer.getWritePointer(channel),
                                           *parameters.getRawParameterValue("Distorsion"),
+                                          buffer.getNumSamples());
+        
+        ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
+                                          buffer.getWritePointer(channel),
+                                          *parameters.getRawParameterValue("Volume"),
                                           buffer.getNumSamples());
     }
 }

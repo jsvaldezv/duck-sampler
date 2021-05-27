@@ -3,7 +3,7 @@
 ### By: Jesús Salvador Valdez Vázquez
 
 This is a sampler plug-in which works by dropping any audio sample into the plug-in. It has a JUCE ADSR, a button distortion toogle with a hard clipping 
-method and an LFO with has a sine waveform. This sampler was developed with JUCE and C++.
+method and a LFO with has a sine waveform. This sampler was developed with JUCE and C++.
 
 **Works with MIDI in any DAW**
 

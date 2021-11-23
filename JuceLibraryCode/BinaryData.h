@@ -9,7 +9,7 @@
 namespace BinaryData
 {
     extern const char*   back_jpg;
-    const int            back_jpgSize = 237959;
+    const int            back_jpgSize = 1192359;
 
     extern const char*   off_png;
     const int            off_pngSize = 142728;

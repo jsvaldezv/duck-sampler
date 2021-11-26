@@ -28,7 +28,7 @@ private:
     std::vector<float> audioPoints;
     juce::String fileName {""};
     
-    //*******************************************ADSR COMPONENTS******************************************//
+    //****************************************** ADSR COMPONENTS *****************************************//
     //ATTACK SLIDER
     juce::Slider attackSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
@@ -45,7 +45,8 @@ private:
     juce::Slider releaseSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseSliderAttachment;
     juce::Label releaseLabel;
-    //*******************************************GENERAL COMPONENTS******************************************//
+    
+    //****************************************** GENERAL COMPONENTS*****************************************//
     //RATE SLIDER
     juce::Slider rateSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateSliderAttachment;
@@ -55,15 +56,19 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> volumenSliderAttachment;
     juce::Label volumenLabel;
     
+    //****************************************** BACKGROUND *****************************************//
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;
     
-    std::unique_ptr<sampler_Waveform> myWave;
+    //****************************************** WAVE *****************************************//
+    sampler_Waveform myWave;
     
-    juce::Image on_Distor;
-    juce::Image off_Distor;
+    //****************************************** DISTORTION *****************************************//
     juce::ImageButton distorButton;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distorAttachment;
+    juce::Image on_Distor;
+    juce::Image off_Distor;
+    juce::Label distorLabel;
     
     Sampler_Curso_FinalAudioProcessor& audioProcessor;
 

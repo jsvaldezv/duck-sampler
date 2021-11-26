@@ -37,44 +37,44 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Volume",
-                                                                 "volume",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("volume",
+                                                                 "Volume",
                                                                  0.0f,
                                                                  1.0f,
                                                                  0.5f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Rate",
-                                                                 "rate",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("rate",
+                                                                 "Rate",
                                                                  0.1f,
                                                                  20.0f,
                                                                  1.0f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Attack",
-                                                                 "attack",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("attack",
+                                                                 "Attack",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Decay",
-                                                                 "decay",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("decay",
+                                                                 "Decay",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Sustain",
-                                                                 "sustain",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("sustain",
+                                                                 "Sustain",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("Release",
-                                                                 "release",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("release",
+                                                                 "Release",
                                                                  0.1f,
                                                                  3.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterBool>("Distorsion",
-                                                                "distorsion",
+    params.push_back(std::make_unique<juce::AudioParameterBool>("distorsion",
+                                                                "Distorsion",
                                                                 false));
     
     return {params.begin(), params.end()};
@@ -202,10 +202,10 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
     
     sampleCount = isNotePlayed ? sampleCount += buffer.getNumSamples() : 0;
     
-    myADSRParameters.attack = *parameters.getRawParameterValue("Attack");
-    myADSRParameters.decay = *parameters.getRawParameterValue("Decay");
-    myADSRParameters.sustain = *parameters.getRawParameterValue("Sustain");
-    myADSRParameters.release = *parameters.getRawParameterValue("Release");
+    myADSRParameters.attack = *parameters.getRawParameterValue("attack");
+    myADSRParameters.decay = *parameters.getRawParameterValue("decay");
+    myADSRParameters.sustain = *parameters.getRawParameterValue("sustain");
+    myADSRParameters.release = *parameters.getRawParameterValue("release");
     updateADSR();
     
     mySampler.renderNextBlock(buffer,
@@ -217,17 +217,17 @@ void Sampler_Curso_FinalAudioProcessor::processBlock (juce::AudioBuffer<float>& 
     {
         ptrLFO[channel]->processLFO(buffer.getWritePointer(channel),
                                     buffer.getWritePointer(channel),
-                                    *parameters.getRawParameterValue("Rate"),
+                                    *parameters.getRawParameterValue("rate"),
                                     buffer.getNumSamples());
         
         ptrDistor[channel]->processDistor(buffer.getWritePointer(channel),
                                           buffer.getWritePointer(channel),
-                                          *parameters.getRawParameterValue("Distorsion"),
+                                          *parameters.getRawParameterValue("distorsion"),
                                           buffer.getNumSamples());
         
         ptrVolume[channel]->processVolume(buffer.getWritePointer(channel),
                                           buffer.getWritePointer(channel),
-                                          *parameters.getRawParameterValue("Volume"),
+                                          *parameters.getRawParameterValue("volume"),
                                           buffer.getNumSamples());
     }
 }
@@ -255,7 +255,6 @@ void Sampler_Curso_FinalAudioProcessor::loadFile(const juce::String& path)
     formatReader = formatManager.createReaderFor(file);
     
     auto sampleLength = static_cast<int>(formatReader->lengthInSamples);
-    //DBG("LENGHT: " << sampleLength);
     waveForm.setSize(1, sampleLength);
     formatReader->read(&waveForm,
                        0,

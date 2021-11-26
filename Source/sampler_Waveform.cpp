@@ -3,7 +3,7 @@
 
 sampler_Waveform::sampler_Waveform(Sampler_Curso_FinalAudioProcessor& p) : audioProcessorMine (p)
 {
-
+    setSize(700, 200);
 }
 
 sampler_Waveform::~sampler_Waveform(){}
@@ -53,7 +53,7 @@ void sampler_Waveform::paint (juce::Graphics& g)
     {
         g.setColour(juce::Colours::white);
         g.setFont(40.0f);
-        g.drawFittedText("Jala un audio", 250, 50, 200, 40, juce::Justification::centred, 1);
+        g.drawFittedText("Drop an audio", 240, 50, 230, 40, juce::Justification::centred, 1);
     }
 }
 

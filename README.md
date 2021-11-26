@@ -1,4 +1,4 @@
-## SAMPLER PLUG-IN
+## DUCKSAMPLER AUDIO PLUG-IN
 
 ### By: Jesús Salvador Valdez Vázquez
 

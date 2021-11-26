@@ -1,4 +1,4 @@
-## DUCKSAMPLER AUDIO PLUG-IN
+## DuckSample Audio Plug-in
 
 ### By: Jesús Salvador Valdez Vázquez
 

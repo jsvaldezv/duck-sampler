@@ -37,43 +37,43 @@ juce::AudioProcessorValueTreeState::ParameterLayout Sampler_Curso_FinalAudioProc
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("volume",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("volume", 1),
                                                                  "Volume",
                                                                  0.0f,
                                                                  1.0f,
                                                                  0.5f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("rate",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("rate", 1),
                                                                  "Rate",
                                                                  0.1f,
                                                                  20.0f,
                                                                  1.0f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("attack",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("attack", 1),
                                                                  "Attack",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("decay",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("decay", 1),
                                                                  "Decay",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("sustain",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("sustain", 1),
                                                                  "Sustain",
                                                                  0.1f,
                                                                  1.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("release",
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("release", 1),
                                                                  "Release",
                                                                  0.1f,
                                                                  3.0f,
                                                                  0.1f));
     
-    params.push_back(std::make_unique<juce::AudioParameterBool>("distorsion",
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("distorsion", 1),
                                                                 "Distorsion",
                                                                 false));
     

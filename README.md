@@ -1,4 +1,4 @@
-# Duck sampler
+# Duck Sampler
 
 <img width="701" alt="sampler" src="https://user-images.githubusercontent.com/47612276/143545842-3c3e10ba-1bcc-4b0b-87f6-ed88acea16f7.png">
 

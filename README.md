@@ -1,6 +1,13 @@
 # Duck Sampler
 
-<img width="701" alt="sampler" src="https://user-images.githubusercontent.com/47612276/143545842-3c3e10ba-1bcc-4b0b-87f6-ed88acea16f7.png">
+https://github.com/user-attachments/assets/0b5cb0fe-06eb-4d6f-8f19-02ac63b5ca3b
 
-This is a sampler plug-in which works by dropping any audio sample into the plug-in. It has a JUCE ADSR, a button distortion toogle with a hard clipping 
-method and a LFO modulation with a sine waveform. The sampler was developed with JUCE and C++.
+This project is a sampler plugin built in C++ using the JUCE framework, leveraging JUCE’s built-in basic sampler engine. It allows users to load and play back audio samples with expressive control over their dynamics and timbre.
+
+🎛️ Key Features:
+
+- Sample playback using JUCE’s basic sampler
+- ADSR envelope with adjustable Attack, Decay, Sustain, and Release
+- LFO modulation targeting amplitude for dynamic movement
+- Distortion toggle button to add harmonic character
+- Final output volume control via a master gain slider

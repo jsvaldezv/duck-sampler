@@ -1,186 +1,126 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-Sampler_Curso_FinalAudioProcessorEditor::Sampler_Curso_FinalAudioProcessorEditor (Sampler_Curso_FinalAudioProcessor& p)
-    : AudioProcessorEditor (&p), myWave(p), audioProcessor (p)
+DuckSamplerAudioProcessorEditor::DuckSamplerAudioProcessorEditor (DuckSamplerAudioProcessor& p) : AudioProcessorEditor (&p), audioProcessor (p), myWave(p)
 {
-    setSize (700, 500);
-    
-    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::back_jpg,
-                                                      BinaryData::back_jpgSize);
-    
-    on_Distor = juce::ImageCache::getFromMemory(BinaryData::on_png,
-                                                BinaryData::on_pngSize);
-    
-    off_Distor = juce::ImageCache::getFromMemory(BinaryData::off_png,
-                                                 BinaryData::off_pngSize);
+    // Images
+    backgroundImage = juce::ImageCache::getFromMemory (BinaryData::back_jpg, BinaryData::back_jpgSize);
+    on_Distor = juce::ImageCache::getFromMemory (BinaryData::on_png, BinaryData::on_pngSize);
+    off_Distor = juce::ImageCache::getFromMemory(BinaryData::off_png, BinaryData::off_pngSize);
 
-    backgroundComponent.setImage(backgroundImage, juce::RectanglePlacement::stretchToFit);
-    addAndMakeVisible(backgroundComponent);
+    // Background
+    backgroundComponent.setImage (backgroundImage, juce::RectanglePlacement::stretchToFit);
     
-    addAndMakeVisible(myWave);
+    // Components
+    addAndMakeVisible (backgroundComponent);
+    addAndMakeVisible (myWave);
     
     createADSRComponents();
     createGeneralComponents();
     
+    // L&F
     getLookAndFeel().setColour (juce::Slider::thumbColourId, juce::Colours::yellow);
     getLookAndFeel().setColour (juce::Slider::rotarySliderFillColourId, juce::Colour(226, 223, 0));
     
-    startTimer(60);
+    startTimer (60);
+    setSize (700, 500);
 }
 
-Sampler_Curso_FinalAudioProcessorEditor::~Sampler_Curso_FinalAudioProcessorEditor()
+DuckSamplerAudioProcessorEditor::~DuckSamplerAudioProcessorEditor()
 {
     stopTimer();
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::resized()
+void DuckSamplerAudioProcessorEditor::resized()
 {
-    backgroundComponent.setBounds(0, 0, getWidth(), getHeight());
+    backgroundComponent.setBounds (0, 0, getWidth(), getHeight());
+    myWave.setBounds (0, 0, getWidth(), getHeight() * 0.4f);
     
-    myWave.setBounds(0, 0, myWave.getWidth(), myWave.getHeight());
+    rateSlider.setBounds (250, 370, 100, 100);
+    volumenSlider.setBounds (350, 370, 100, 100);
+    attackSlider.setBounds (150, 230, 100, 100);
+    decaySlider.setBounds (250, 230, 100, 100);
+    sustainSlider.setBounds (350, 230, 100, 100);
+    releaseSlider.setBounds (450, 230, 100, 100);
+    
+    distorButton.setBounds (getWidth() - 90, getHeight() - 90, 80, 80);
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::timerCallback()
+void DuckSamplerAudioProcessorEditor::prepareSlider (juce::Slider& slider, juce::Label& label, juce::String sliderID)
+{
+    slider.setSliderStyle (juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    slider.setTextBoxStyle (juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible (slider);
+    
+    label.setText (sliderID, juce::dontSendNotification);
+    label.attachToComponent (&slider, false);
+    label.setJustificationType (juce::Justification::centred);
+    label.setColour (juce::Label::textColourId, juce::Colours::white);
+    addAndMakeVisible (label);
+}
+
+void DuckSamplerAudioProcessorEditor::timerCallback()
 {
     repaint();
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::createGeneralComponents()
+void DuckSamplerAudioProcessorEditor::createGeneralComponents()
 {
-    rateSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    rateSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    rateSlider.setBounds(250, 370, 100, 100);
-    addAndMakeVisible(rateSlider);
+    prepareSlider (rateSlider, rateLabel, RATE);
+    prepareSlider (volumenSlider, volumenLabel, VOLUME);
     
-    rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                   "rate",
-                                                                                                   rateSlider);
+    rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), RATE, rateSlider);
+    volumenSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), VOLUME, volumenSlider);
     
-    rateLabel.setText("Rate", juce::dontSendNotification);
-    rateLabel.attachToComponent(&rateSlider, true);
-    rateLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    rateLabel.setCentrePosition(rateSlider.getX() + 50, rateSlider.getY() - 5);
-    addAndMakeVisible(rateLabel);
+    // Distortion button
+    distorButton.setClickingTogglesState (true);
+    distorButton.setImages (false, true, false, off_Distor, 1.0f, {}, off_Distor, 1.0f, {}, on_Distor, 1.0f, {});
+    addAndMakeVisible (distorButton);
     
-    volumenSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    volumenSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    volumenSlider.setBounds(350, 370, 100, 100);
-    addAndMakeVisible(volumenSlider);
+    distorLabel.setText ("Distortion", juce::dontSendNotification);
+    distorLabel.attachToComponent (&distorButton, false);
+    distorLabel.setJustificationType (juce::Justification::centred);
+    distorLabel.setColour (juce::Label::textColourId, juce::Colours::white);
+    addAndMakeVisible (distorLabel);
     
-    volumenLabel.setText("Volumen", juce::dontSendNotification);
-    volumenLabel.attachToComponent(&volumenSlider, true);
-    volumenLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    volumenLabel.setCentrePosition(volumenSlider.getX() + 50, volumenSlider.getY() - 5);
-    addAndMakeVisible(volumenLabel);
-    
-    volumenSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                      "volume",
-                                                                                                      volumenSlider);
-    
-    distorButton.setClickingTogglesState(true);
-    distorButton.setBounds(getWidth() - 90, getHeight() - 90, 80, 80);
-    distorButton.setImages(false, true, false, off_Distor, 1.0f, {}, off_Distor, 1.0f, {}, on_Distor, 1.0f, {});
-    addAndMakeVisible(distorButton);
-    distorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.parameters,
-                                                                                               "distorsion",
-                                                                                               distorButton);
-    distorLabel.setText("Distortion", juce::dontSendNotification);
-    distorLabel.attachToComponent(&distorButton, true);
-    distorLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    distorLabel.setCentrePosition(distorButton.getX() + 36, distorButton.getY() - 5);
-    addAndMakeVisible(distorLabel);
+    distorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.getAPVTS(), DISTORTION, distorButton);
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::createADSRComponents()
+void DuckSamplerAudioProcessorEditor::createADSRComponents()
 {
-    attackSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    attackSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    attackSlider.setBounds(150, 230, 100, 100);
-    addAndMakeVisible(attackSlider);
+    prepareSlider (attackSlider, attackLabel, ATTACK);
+    prepareSlider (decaySlider, decayLabel, DECAY);
+    prepareSlider (sustainSlider, sustainLabel, SUSTAIN);
+    prepareSlider (releaseSlider, releaseLabel, RELEASE);
     
-    attackLabel.setText("Attack", juce::dontSendNotification);
-    attackLabel.attachToComponent(&attackSlider, true);
-    attackLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    attackLabel.setCentrePosition(attackSlider.getX() + 50, attackSlider.getY() - 5);
-    addAndMakeVisible(attackLabel);
-    
-    attackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                     "attack",
-                                                                                                     attackSlider);
-    
-    decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    decaySlider.setBounds(250, 230, 100, 100);
-    addAndMakeVisible(decaySlider);
-    
-    decayLabel.setText("Decay", juce::dontSendNotification);
-    decayLabel.attachToComponent(&decaySlider, true);
-    decayLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    decayLabel.setCentrePosition(decaySlider.getX() + 50, decaySlider.getY() - 5);
-    addAndMakeVisible(decayLabel);
-    
-    decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                     "decay",
-                                                                                                     decaySlider);
-    
-    sustainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    sustainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    sustainSlider.setBounds(350, 230, 100, 100);
-    addAndMakeVisible(sustainSlider);
-    
-    sustainLabel.setText("Sustain", juce::dontSendNotification);
-    sustainLabel.attachToComponent(&sustainSlider, true);
-    sustainLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    sustainLabel.setCentrePosition(sustainSlider.getX() + 50, sustainSlider.getY() - 5);
-    addAndMakeVisible(sustainLabel);
-    
-    sustainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                     "sustain",
-                                                                                                     sustainSlider);
-    
-    releaseSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    releaseSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 50, 20);
-    releaseSlider.setBounds(450, 230, 100, 100);
-    addAndMakeVisible(releaseSlider);
-    
-    releaseLabel.setText("Release", juce::dontSendNotification);
-    releaseLabel.attachToComponent(&releaseSlider, true);
-    releaseLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-    releaseLabel.setCentrePosition(releaseSlider.getX() + 50, releaseSlider.getY() - 5);
-    addAndMakeVisible(releaseLabel);
-    
-    releaseSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.parameters,
-                                                                                                     "release",
-                                                                                                     releaseSlider);
+    attackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), ATTACK, attackSlider);
+    decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), DECAY, decaySlider);
+    sustainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), SUSTAIN, sustainSlider);
+    releaseSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.getAPVTS(), RELEASE, releaseSlider);
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::paint (juce::Graphics& g){}
+void DuckSamplerAudioProcessorEditor::paint (juce::Graphics& g) {}
 
-bool Sampler_Curso_FinalAudioProcessorEditor::isInterestedInFileDrag (const juce::StringArray& files)
+bool DuckSamplerAudioProcessorEditor::isInterestedInFileDrag (const juce::StringArray& files)
 {
-    for(auto file : files)
+    for (auto file : files)
     {
-        if(file.contains(".wav") || file.contains(".mp3") || file.contains(".aiff"))
-        {
+        if (file.contains(".wav") || file.contains(".mp3") || file.contains(".aiff"))
             return true;
-        }
     }
     
     return false;
 }
 
-void Sampler_Curso_FinalAudioProcessorEditor::filesDropped (const juce::StringArray& files,
-                                                            int x,
-                                                            int y)
+void DuckSamplerAudioProcessorEditor::filesDropped (const juce::StringArray& files, int x, int y)
 {
-    for(auto file : files)
+    for (auto file : files)
     {
-        if(isInterestedInFileDrag(file))
+        if (isInterestedInFileDrag(file))
         {
-            auto myFile = std::make_unique<juce::File>(file);
+            auto myFile = std::make_unique<juce::File> (file);
             fileName = myFile->getFileNameWithoutExtension() + myFile->getFileExtension();
-            audioProcessor.loadFile(file);
+            audioProcessor.loadFile (file);
         }
     }
     

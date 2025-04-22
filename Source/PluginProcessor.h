@@ -1,15 +1,16 @@
 #pragma once
 #include <JuceHeader.h>
-#include "sampler_Volume.h"
-#include "sampler_LFO.h"
-#include "sampler_Distorsion.h"
+#include "Helpers/Parameters.h"
+#include "DSP/Volume.h"
+#include "DSP/LFO.h"
+#include "DSP/Distortion.h"
 
-class Sampler_Curso_FinalAudioProcessor  : public juce::AudioProcessor
+class DuckSamplerAudioProcessor : public juce::AudioProcessor
 {
 public:
 
-    Sampler_Curso_FinalAudioProcessor();
-    ~Sampler_Curso_FinalAudioProcessor() override;
+    DuckSamplerAudioProcessor();
+    ~DuckSamplerAudioProcessor() override;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -34,34 +35,37 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    juce::AudioProcessorValueTreeState parameters;
-    juce::AudioProcessorValueTreeState::ParameterLayout initializeGUI();
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     
-    void loadFile();
-    void loadFile(const juce::String& path);
-    int getNumSamplerSounds(){return mySampler.getNumSounds();};
-    juce::AudioBuffer<float>& getWaveform() {return waveForm;}
+    juce::AudioBuffer<float>& getWaveform() { return waveForm; }
     
-    void updateADSR();
-    std::atomic<bool>& isNotPlayed() {return isNotePlayed;}
-    std::atomic<int>& getSampleCount() {return sampleCount;}
+    std::atomic<bool>& isNotPlayed() { return isNotePlayed; }
+    std::atomic<int>& getSampleCount() { return sampleCount; }
+    int getNumSamplerSounds() { return mySampler.getNumSounds(); }
+    
+    void loadFile (const juce::String& path);
     
 private:
     
-    juce::AudioBuffer<float> waveForm;
+    juce::AudioProcessorValueTreeState apvts;
+    void updateParameters();
     
     juce::Synthesiser mySampler;
-    juce::AudioFormatManager formatManager;
-    juce::AudioFormatReader* formatReader {nullptr};
     
+    std::atomic<bool> isNotePlayed { false };
+    std::atomic<int> sampleCount { 0 };
+    
+    void updateADSR();
     juce::ADSR::Parameters myADSRParameters;
-
-    std::unique_ptr<sampler_Volume> ptrVolume[2];
-    std::unique_ptr<sampler_LFO> ptrLFO[2];
-    std::unique_ptr<sampler_Distorsion> ptrDistor[2];
     
-    std::atomic<bool> isNotePlayed {false};
-    std::atomic<int> sampleCount {0};
+    Volume volume;
+    LFO lfo;
+    Distortion distortion;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessor)
+    juce::AudioBuffer<float> waveForm;
+    
+    juce::AudioFormatManager formatManager;
+    juce::AudioFormatReader* formatReader { nullptr };
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DuckSamplerAudioProcessor)
 };

@@ -1,76 +1,57 @@
 #pragma once
 #include <JuceHeader.h>
+#include "Helpers/Parameters.h"
 #include "PluginProcessor.h"
-#include "sampler_Waveform.h"
+#include "Components/WaveformComponent.h"
 
-class Sampler_Curso_FinalAudioProcessorEditor : public juce::AudioProcessorEditor,
-                                                public juce::FileDragAndDropTarget,
-                                                public juce::Timer
+class DuckSamplerAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::FileDragAndDropTarget, public juce::Timer
 {
 public:
     
-    Sampler_Curso_FinalAudioProcessorEditor (Sampler_Curso_FinalAudioProcessor&);
-    ~Sampler_Curso_FinalAudioProcessorEditor() override;
+    DuckSamplerAudioProcessorEditor (DuckSamplerAudioProcessor&);
+    ~DuckSamplerAudioProcessorEditor() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
     
-    bool isInterestedInFileDrag (const juce::StringArray& files) override;
-    void filesDropped (const juce::StringArray& files, int x, int y) override;
-    
+    void prepareSlider (juce::Slider&, juce::Label&, juce::String);
     void createADSRComponents();
     void createGeneralComponents();
+    
+    bool isInterestedInFileDrag (const juce::StringArray& files) override;
+    void filesDropped (const juce::StringArray& files, int x, int y) override;
     
     void timerCallback() override;
 
 private:
     
-    std::vector<float> audioPoints;
-    juce::String fileName {""};
+    DuckSamplerAudioProcessor& audioProcessor;
     
-    //****************************************** ADSR COMPONENTS *****************************************//
-    //ATTACK SLIDER
-    juce::Slider attackSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
-    juce::Label attackLabel;
-    //DECAY SLIDER
-    juce::Slider decaySlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
-    juce::Label decayLabel;
-    //SUSTAIN SLIDER
-    juce::Slider sustainSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sustainSliderAttachment;
-    juce::Label sustainLabel;
-    //RELEASE SLIDER
-    juce::Slider releaseSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseSliderAttachment;
-    juce::Label releaseLabel;
+    juce::String fileName { "" };
     
-    //****************************************** GENERAL COMPONENTS*****************************************//
-    //RATE SLIDER
-    juce::Slider rateSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateSliderAttachment;
-    juce::Label rateLabel;
-    //VOLUMEN SLIDER
-    juce::Slider volumenSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> volumenSliderAttachment;
-    juce::Label volumenLabel;
+    // ADSR
+    juce::Slider attackSlider, decaySlider, sustainSlider, releaseSlider;
+    juce::Label attackLabel, decayLabel, sustainLabel, releaseLabel;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment, decaySliderAttachment, sustainSliderAttachment, releaseSliderAttachment;
     
-    //****************************************** BACKGROUND *****************************************//
+    // General
+    juce::Slider rateSlider, volumenSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateSliderAttachment, volumenSliderAttachment;
+    juce::Label rateLabel, volumenLabel;
+    
+    // Background
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;
     
-    //****************************************** WAVE *****************************************//
-    sampler_Waveform myWave;
+    // Wave component
+    WaveformComponent myWave;
+    std::vector<float> audioPoints;
     
-    //****************************************** DISTORTION *****************************************//
+    // Distortion
     juce::ImageButton distorButton;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distorAttachment;
-    juce::Image on_Distor;
-    juce::Image off_Distor;
+    juce::Image on_Distor, off_Distor;
     juce::Label distorLabel;
-    
-    Sampler_Curso_FinalAudioProcessor& audioProcessor;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distorAttachment;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Sampler_Curso_FinalAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DuckSamplerAudioProcessorEditor)
 };
